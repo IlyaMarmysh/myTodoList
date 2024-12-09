@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import {Button, IconButton, TextField} from "@mui/material";
+import {IconButton, TextField} from "@mui/material";
 import {ControlPoint} from "@mui/icons-material";
 
 type AddItemFormProps = {
@@ -10,18 +10,22 @@ export function AddItemForm(props: AddItemFormProps) {
     const [newTaskTitle, setNewTaskTitle] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const onChangeNewHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTaskTitle(e.target.value)
+        setNewTaskTitle(e.currentTarget.value)
     };
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null)
         if (e.key === "Enter") {
-            props.addItem(newTaskTitle)
-            setNewTaskTitle("")
+            if (newTaskTitle.trim() !== "") {
+                props.addItem(newTaskTitle.trim())
+                setNewTaskTitle("")
+            } else {
+                setError("Title is required")
+            }
         }
     };
     const onClickAddTask = () => {
         if (newTaskTitle.trim() !== "") {
-            props.addItem(newTaskTitle)
+            props.addItem(newTaskTitle.trim())
             setNewTaskTitle("")
         } else {
             setError("Title is required")
