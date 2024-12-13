@@ -1,7 +1,7 @@
 import {v1} from "uuid";
 import {addedTaskAC, changeStatusTaskAC, changeTaskTitleAC, removedTaskAC, taskReducer} from "./task-reducer";
 import {TasksStateType} from "../App";
-import {AddTodolistAC} from "./todolists-reducer";
+import {AddTodolistAC, RemoveTodolistAC} from "./todolists-reducer";
 import {Error} from "@mui/icons-material";
 
 
@@ -129,8 +129,35 @@ test('new array should be added when new todolist is added', ()=>{
 
     const keys = Object.keys(endState);
     const newKey = keys.find(k => k !== todolistID2 && k !== todolistID1);
-
+    if (!newKey) {
+        // @ts-ignore
+        throw Error("new key should be added")
+    }
     expect(keys.length).toBe(3)
-    // @ts-ignore
     expect(endState[newKey]).toEqual([])
+})
+test('property with todolistId should be deleted', ()=>{
+    let todolistID1 = v1();
+    let todolistID2 = v1();
+    const startState: TasksStateType = {
+        [todolistID1]: [
+            {id: "1", name: "Css & Html", isDone: true,},
+            {id: "2", name: "Js", isDone: true},
+            {id: "3", name: "React", isDone: false},
+            {id: "4", name: "TypeScript", isDone: false},
+        ],
+        [todolistID2]: [
+            {id: "1", name: "Apple", isDone: true,},
+            {id: "2", name: "Fish", isDone: true},
+            {id: "3", name: "Orange", isDone: false},
+            {id: "4", name: "Sushi", isDone: false},
+        ]
+    }
+    const action = RemoveTodolistAC (todolistID2);
+    const endState = taskReducer(startState, action)
+
+    const keys = Object.keys(endState);
+
+    expect(keys.length).toBe(1)
+    expect(endState[todolistID2]).not.toBeDefined()
 })
