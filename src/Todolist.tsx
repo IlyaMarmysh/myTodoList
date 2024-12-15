@@ -7,7 +7,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {addedTaskAC, changeStatusTaskAC, changeTaskTitleAC, removedTaskAC} from "./state/task-reducer";
 import {AppRootState, useAppDispatch} from "./state/store";
 import {useSelector} from "react-redux";
-import {TasksStateType} from "./AppWithRedux";
 
 export type TaskType = {
     id: string,
